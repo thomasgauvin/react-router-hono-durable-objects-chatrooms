@@ -10,6 +10,26 @@ interface UserSession {
 // Durable Object
 export class WebSocketHibernationServer extends DurableObject {
   private sessions = new Map<WebSocket, UserSession>();
+
+  constructor(ctx: DurableObjectState, env: Env) {
+    super(ctx, env);
+    this.ctx = ctx;
+
+    console.log(`WebSocketHibernationServer initialized with ID: ${ctx.id}`);
+    console.log("Restoring existing WebSocket sessions...");
+    console.log(
+      `Found ${this.ctx.getWebSockets().length} existing WebSocket connections.`
+    );
+
+    this.ctx.getWebSockets().forEach((webSocket) => {
+      let meta = webSocket.deserializeAttachment();
+
+      this.sessions.set(webSocket, {
+        ...meta,
+      });
+    });
+  }
+
   async fetch(request: Request): Promise<Response> {
     // Creates two ends of a WebSocket connection.
     const webSocketPair = new WebSocketPair();
@@ -75,6 +95,13 @@ export class WebSocketHibernationServer extends DurableObject {
 
     // Store user session
     this.sessions.set(ws, {
+      username,
+      room,
+      userId,
+      joinedAt: Date.now(),
+    });
+
+    ws.serializeAttachment({
       username,
       room,
       userId,
