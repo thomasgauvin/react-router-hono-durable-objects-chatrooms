@@ -1,6 +1,6 @@
 # React-Router + Hono + Durable Objects WebSockets Chatrooms, on Cloudflare
 
-Are you trying to build WebSockets-enabled real-time collaboration, on top of Durable Objects using Hono and React Router? Look no further:
+Are you trying to build WebSockets-enabled real-time collaboration, on top of Durable Objects using Hono and React Router? And using Durable Object's Hibernating WebSockets API? Look no further:
 
 ```
 npm create cloudflare@latest -- --template thomasgauvin/react-router-hono-durable-objects-chatrooms
